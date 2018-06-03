@@ -27,17 +27,6 @@
 
         </LinearLayout>
     </LinearLayout>
-    <Button
-        android:id="@+id/deleteall_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete all songs from playlist" />
-    <Button
-        android:id="@+id/genre_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Genre modus off" />
-
 
     <Button
         android:id="@+id/manage_playlists"
