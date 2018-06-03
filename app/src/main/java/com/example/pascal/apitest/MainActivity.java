@@ -255,14 +255,16 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
                     if(intent.getStringArrayListExtra(Constants.EXTRA_ARTIST) != null){
                        artists = intent.getStringArrayListExtra(Constants.EXTRA_TRACKS);
                     }
-                    playlistid = PrefUtils.getStringPreference(MainActivity.this,"playlist", null);
-                    if(playlistid == null){
+                    playlistid = PrefUtils.getStringPreference(MainActivity.this,"playlistid", null);
+                    String playlistname = PrefUtils.getStringPreference(MainActivity.this,"playlistname", null);
+
+                    if(playlistid == null && playlistname == null){
                         Toast.makeText(context, "Please set an activeplaylist by going to setting spotify constraints and pressing manage playlist", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     ArrayList<String> songs = intent.getStringArrayListExtra(Constants.EXTRA_LASTFM);
                     setTracksAndArtists(songs);
-                    new MyTask(token, tracks, artists, users, playlistid).execute("");
+                    new MyTask(token, tracks, artists, users, playlistid, playlistname).execute("");
                     Intent i = new Intent(context, ListViewActivity.class);
                     i.putExtra(ARRAYLIST, songs);
                     startActivity(i);

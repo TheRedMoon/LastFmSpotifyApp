@@ -58,7 +58,8 @@ public class PlaylistAct extends AppCompatActivity {
         setactivepl.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(chosenactivePl != null){
-                    PrefUtils.setStringPreference(PlaylistAct.this, "playlist", chosenactivePl.getId());
+                    PrefUtils.setStringPreference(PlaylistAct.this, "playlistid", chosenactivePl.getId());
+                    PrefUtils.setStringPreference(PlaylistAct.this, "playlistname", chosenactivePl.getName());
                 }
                 else{
                     Toast.makeText(PlaylistAct.this,"Choose a playlist in the spinner above",

@@ -18,6 +18,9 @@ import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Jeroen on 8-3-2018.
@@ -25,6 +28,7 @@ import kaaes.spotify.webapi.android.models.TracksPager;
 //https://programtalk.com/java-api-usage-examples/kaaes.spotify.webapi.android.models.Playlist/
 
 public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
+    private final String playlistname;
     private ArrayList<String> artists;
     private SpotifyService spotify;
     private String token, playlistid;
@@ -32,31 +36,44 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
     private ArrayList<String> songs;
     private List<String> users;
 
-    public MyTask(String token, ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistid) {
+    public MyTask(String token, ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistid, String playlistname) {
         this.playlistid = playlistid;
+        this.playlistname = playlistname;
         this.token = token;
         this.songs = tracks;
         this.artists = artists;
         this.users = users;
     }
 
-    private boolean checkSolo(){
-        if(users.contains("SaintSiant")){
-            if(users.size() == 1){
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     protected Pager<PlaylistSimple> doInBackground(String... params) {
-        if(playlistid == null){
-            return null;
-        }
+        if((playlistname == null && playlistid == null)) return null;
         api = new SpotifyApi();
         spotify = api.getService();
         api.setAccessToken(token);
+        if(playlistid == null || playlistid.equals("")){
+            Log.e("Test", "in null");
+            spotify.getMyPlaylists(new Callback<Pager<PlaylistSimple>>() {
+                @Override
+                public void success(Pager<PlaylistSimple> playlistPager, Response response) {
+                    Log.d("TEST", "Got the playlists");
+                    List<PlaylistSimple> playlists = playlistPager.items;
+                    for (PlaylistSimple p : playlists) {
+                        Log.e("TEST", p.name + " - " + p.id );
+                        Log.e("TEST", playlistname );
+                        if(p.name.toLowerCase().equals(playlistname.toLowerCase())){
+                            Log.e("TEST", "playstid set");
+                            playlistid = p.id;
+                            break;
+                        }
+                    }
+                }
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("TEST", "Could not get playlists");
+                }
+            });
+        }
         Map<String, Object> options = new HashMap<String, Object>();
 //        options.put("name", "testplaylist");
 //        options.put("public", true);
@@ -88,7 +105,10 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
 
         final Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("position", String.valueOf(position));
-        Log.e("Gorekots", sb.toString());
+
+
+
+        Log.e("TEST", "PlaylistID: " + playlistid);
         spotify.replaceTracksInPlaylist(owner, playlistid, sb.toString(), queryParameters);
 
 //        spotify.addTracksToPlaylist(owner, playlistid, queryParameters, options);
@@ -129,7 +149,7 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
                 for(int j = 0; j<artist.size(); j++){
                     if(!finished){
                         Log.e("Kots23", artist.get(j).artists.get(0).name + " other " + artists.get(i));
-                        if(artist.get(j).artists.get(0).name.contains(artists.get(i))){
+                        if(artist.get(j).artists.get(0).name.toLowerCase().contains(artists.get(i).toLowerCase())){
                             Log.e("Kots2", artist.get(j).uri);
                             result.add(artist.get(j).uri);
                             finished = true;
