@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical" >
+<TextView android:id="@+id/txt_eta"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Hello, I am a TextView" />
+<Button android:id="@+id/eta_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Get the eta" />
+
+<Button android:id="@+id/weather_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Get the weather" />
+
+    <Button android:id="@+id/lastfm_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Last Fm songs" />
+    <EditText
+        android:id="@+id/period_lastfm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+                                        />
+    <EditText
+        android:id="@+id/limit_lastfm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <Button android:id="@+id/set_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Set spotify constants" />
+</LinearLayout>

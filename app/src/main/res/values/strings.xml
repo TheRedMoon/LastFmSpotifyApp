@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Linker</string>
+
+    <string name="open_weather_maps_app_id">a4947da5f05e65aa8d0e611b5f74630b</string>
+    <string name="googlde_directions_api_key">api key</string>
+    <string name="lastfm_api_key">355c053e2d6a85a1eeff54d923a36e00</string>
+    <string name="place_not_found">Kon de plaats niet vinden</string>
+    <string name="process_eta_title">fetching eta</string>
+</resources>
