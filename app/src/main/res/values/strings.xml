@@ -1,4 +1,7 @@
 <resources>
+
+
+
     <string name="app_name">Linker</string>
 
     <string name="open_weather_maps_app_id">a4947da5f05e65aa8d0e611b5f74630b</string>

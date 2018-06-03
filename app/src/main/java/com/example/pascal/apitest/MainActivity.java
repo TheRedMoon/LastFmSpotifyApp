@@ -15,9 +15,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,8 +53,9 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     public static final String ARRAYLIST = "ARRAYLIST";
     Context context = this;
     private TextView txtEta;
-    private EditText periodLastfm, limitLastfm, playlistfield;
+    private EditText limitLastfm, playlistfield;
     private Button getEta, getWeather, getLastfm, setcontraints;
+    private Spinner periodLastfm;
     private IntentFilter intentFilter;
     private String weather, token;
     ArrayList<String> tracks;
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     private List<String> users;
     private Player mPlayer;
     private static final int REQUEST_CODE = 1337;
+    private String period;
 
     //keytool -list -v -keystore "C:\Users\Jeroen\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
 //https://www.programcreek.com/java-api-examples/index.php?api=kaaes.spotify.webapi.android.models.Pager
@@ -73,13 +78,31 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
         artists = new ArrayList<String>();
         tracks = new ArrayList<>();
         artists = new ArrayList<>();
-        txtEta = findViewById(R.id.txt_eta);
         getLastfm = findViewById(R.id.lastfm_btn);
-        getEta = findViewById(R.id.eta_btn);
-        getWeather = findViewById(R.id.weather_btn);
         periodLastfm = findViewById(R.id.period_lastfm);
         limitLastfm =  findViewById(R.id.limit_lastfm);
+        period = "overall";
 
+        ArrayList<String> periods = new ArrayList<String>( );
+        periods.add("overall");
+        periods.add("7day");
+        periods.add("1month");
+        periods.add("3month");
+        periods.add("6month");
+        periods.add("12month");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, periods);
+        periodLastfm.setAdapter(adapter);
+        periodLastfm.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                period =periodLastfm.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         Intent intent = getIntent();
         if(intent.getStringExtra(Constants.EXTRA_TOKEN) != null){
@@ -91,12 +114,6 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), PrefAct.class);
                 startActivity(i);
-            }
-        });
-
-        getEta.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                new Process(new RemoteFetch(), context, "Ede", "Lunteren", "DRIVING" ).execute();
             }
         });
 
@@ -112,33 +129,18 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
                         users.add(u.getUsername());
                     }
                 }
-                boolean periodon = !periodLastfm.getText().toString().equals("");
                 boolean limiton = !limitLastfm.getText().toString().equals("");
                 //todo make preference playlist or quick playlist chooser.
-                if(periodon && limiton ){
-                    String period = periodLastfm.getText().toString();
+                if(limiton ){
                     String limit = limitLastfm.getText().toString();
                     new Process(context, new RemoteFetch() , users, period, limit).execute();
                 }
-                else if(!periodLastfm.getText().toString().equals("") ){
-                    String period = periodLastfm.getText().toString();
-                    new Process(context, new RemoteFetch() , users, period, "10").execute();
-                }
-                else if(!periodLastfm.getText().toString().equals("") ){
-                    String limit = limitLastfm.getText().toString();
-                    new Process(context, new RemoteFetch() , users, "overall", limit).execute();
-                }
                 else{
-                    new Process(context, new RemoteFetch() , users, "overall", "10" ).execute();
+                    new Process(context, new RemoteFetch() , users, period, "25").execute();
                 }
             }
         });
 
-        getWeather.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                new Process(new RemoteFetch(), context, "Ede" ).execute();
-            }
-        });
 
         intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.ACTION_DONE_FETCHING_ETA);

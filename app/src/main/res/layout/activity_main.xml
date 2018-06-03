@@ -3,36 +3,36 @@
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical" >
-<TextView android:id="@+id/txt_eta"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Hello, I am a TextView" />
-<Button android:id="@+id/eta_btn"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Get the eta" />
-
-<Button android:id="@+id/weather_btn"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Get the weather" />
-
-    <Button android:id="@+id/lastfm_btn"
-        android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Get Last Fm songs" />
-    <EditText
+        android:text="Choose a period"
+        android:textSize="25sp"/>
+    <Spinner
         android:id="@+id/period_lastfm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-                                        />
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Number of songs:"
+        android:textSize="25sp"/>
     <EditText
         android:id="@+id/limit_lastfm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="phone"
         />
 
-    <Button android:id="@+id/set_btn"
+    <Button
+        android:id="@+id/lastfm_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Last Fm songs" />
+
+    <Button
+        android:id="@+id/set_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
