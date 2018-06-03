@@ -31,7 +31,7 @@ public class UserlistAct extends AppCompatActivity {
     private Button deleteuser, adduser;
     private ArrayList<User> userlistvalues;
     private ListView listView;
-    private ArrayAdapter<String> adapter;
+    private DataBaseAdaptar adapter;
     private ArrayList<String> showlist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class UserlistAct extends AppCompatActivity {
 
 
 
-        DataBaseAdaptar adapter = new DataBaseAdaptar(showlist, this);
+        adapter = new DataBaseAdaptar(showlist, this);
 
         listView = ( ListView ) findViewById(R.id.user_list);
 
@@ -76,10 +76,10 @@ public class UserlistAct extends AppCompatActivity {
     }
 
     private void deleteUser(String realname, String nickname) {
-        if(realname.equals("")) {
+        if(realname == null) {
             BaseApp.userlistDAO.deleteByUserName(nickname);
         }
-        else if(nickname.equals("")){
+        else if(nickname == null){
             BaseApp.userlistDAO.deleteByRealName(realname);
         }
         else{
@@ -100,6 +100,7 @@ public class UserlistAct extends AppCompatActivity {
             }
         }
         adapter.notifyDataSetChanged();
+        Toast.makeText(this, "Sucessfully added a user! Please reload this to update the list", Toast.LENGTH_SHORT).show();
 }
 
     private ArrayList<User> getUserValues() {
