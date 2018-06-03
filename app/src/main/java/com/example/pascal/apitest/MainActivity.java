@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     private Player mPlayer;
     private static final int REQUEST_CODE = 1337;
     private String period;
-    private String playlistid;
+    private String playlistname;
 
     //keytool -list -v -keystore "C:\Users\Jeroen\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
 //https://www.programcreek.com/java-api-examples/index.php?api=kaaes.spotify.webapi.android.models.Pager
@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
         periodLastfm = findViewById(R.id.period_lastfm);
         limitLastfm =  findViewById(R.id.limit_lastfm);
         txtEta = findViewById(R.id.current_playlist);
-        playlistid = PrefUtils.getStringPreference(MainActivity.this,"playlist", null);
-        if(playlistid!= null)        txtEta.setText(playlistid);
+        playlistname = PrefUtils.getStringPreference(MainActivity.this,"playlistname", null);
+        if(playlistname!= null)        txtEta.setText(playlistname);
         period = "overall";
 
         ArrayList<String> periods = new ArrayList<String>( );
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     @Override
     public void onResume() {
         registerReceiver(broadcastReciever, intentFilter);
-        if(playlistid!= null)        txtEta.setText(playlistid);
+        if(playlistname!= null)        txtEta.setText(playlistname);
         super.onResume();
     }
 
@@ -255,16 +255,16 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
                     if(intent.getStringArrayListExtra(Constants.EXTRA_ARTIST) != null){
                        artists = intent.getStringArrayListExtra(Constants.EXTRA_TRACKS);
                     }
-                    playlistid = PrefUtils.getStringPreference(MainActivity.this,"playlistid", null);
-                    String playlistname = PrefUtils.getStringPreference(MainActivity.this,"playlistname", null);
+//                    playlistid = PrefUtils.getStringPreference(MainActivity.this,"playlistid", null);
+                    playlistname = PrefUtils.getStringPreference(MainActivity.this,"playlistname", null);
 
-                    if(playlistid == null && playlistname == null){
+                    if(playlistname == null){
                         Toast.makeText(context, "Please set an activeplaylist by going to setting spotify constraints and pressing manage playlist", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     ArrayList<String> songs = intent.getStringArrayListExtra(Constants.EXTRA_LASTFM);
                     setTracksAndArtists(songs);
-                    new MyTask(token, tracks, artists, users, playlistid, playlistname).execute("");
+                    new MyTask(token, tracks, artists, users, playlistname).execute("");
                     Intent i = new Intent(context, ListViewActivity.class);
                     i.putExtra(ARRAYLIST, songs);
                     startActivity(i);

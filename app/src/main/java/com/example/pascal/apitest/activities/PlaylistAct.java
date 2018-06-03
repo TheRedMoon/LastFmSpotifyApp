@@ -33,7 +33,7 @@ public class PlaylistAct extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlists);
-        playlistid = findViewById(R.id.playlist_id);
+//        playlistid = findViewById(R.id.playlist_id);
         playlistname = findViewById(R.id.playlist_name);
         setactivepl = findViewById(R.id.set_activeplaylist);
         delplaylist = findViewById(R.id.delete_playlist);
@@ -43,22 +43,22 @@ public class PlaylistAct extends AppCompatActivity {
 
         addplaylist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String plid = playlistid.getText().toString();
+//                String plid = playlistid.getText().toString();
                 String plname = playlistname.getText().toString();
-                addPlaylist(plname, plid);
+                addPlaylist(plname);
             }
         });
         delplaylist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String plid = playlistid.getText().toString();
+//                String plid = playlistid.getText().toString();
                 String plname = playlistname.getText().toString();
-                deletePlaylist(plname, plid);
+                deletePlaylist(plname);
             }
         });
         setactivepl.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(chosenactivePl != null){
-                    PrefUtils.setStringPreference(PlaylistAct.this, "playlistid", chosenactivePl.getId());
+//                    PrefUtils.setStringPreference(PlaylistAct.this, "playlistid", chosenactivePl.getId());
                     PrefUtils.setStringPreference(PlaylistAct.this, "playlistname", chosenactivePl.getName());
                 }
                 else{
@@ -82,7 +82,7 @@ public class PlaylistAct extends AppCompatActivity {
                 Playlist p = adapter.getItem(position);
                 chosenactivePl = p;
                 // Here you can do the action you want to...
-                Toast.makeText(PlaylistAct.this, "ID: " + p.getId() + "\nName: " + p.getName(),
+                Toast.makeText(PlaylistAct.this, "\nName: " + p.getName(),
                         Toast.LENGTH_SHORT).show();
             }
             @Override
@@ -90,22 +90,19 @@ public class PlaylistAct extends AppCompatActivity {
         });
     }
 
-    private void deletePlaylist(String plname, String plid) {
-        if(plname == null) {
-            BaseApp.playlistDAO.deleteById(plid);
-        }
-        else if(plid == null){
-            BaseApp.playlistDAO.deleteById(plname);
+    private void deletePlaylist(String plname) {
+        if(plname != null){
+            BaseApp.playlistDAO.deleteByName(plname);
         }
         else{
             Toast.makeText(this, "Enter valid playlist id or name", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void addPlaylist(String plname, String plid) {
+    private void addPlaylist(String plname) {
         Playlist p = new Playlist();
         p.setName(plname);
-        p.setId(plid);
+//        p.setId(plid);
         BaseApp.playlistDAO.insert(p);
     }
 

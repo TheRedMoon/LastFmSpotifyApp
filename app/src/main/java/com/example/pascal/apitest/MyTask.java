@@ -1,8 +1,11 @@
 package com.example.pascal.apitest;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.pascal.apitest.activities.PlaylistAct;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -36,8 +39,8 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
     private ArrayList<String> songs;
     private List<String> users;
 
-    public MyTask(String token, ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistid, String playlistname) {
-        this.playlistid = playlistid;
+    public MyTask(String token, ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistname) {
+//        this.playlistid = playlistname;
         this.playlistname = playlistname;
         this.token = token;
         this.songs = tracks;
@@ -47,32 +50,46 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
 
     @Override
     protected Pager<PlaylistSimple> doInBackground(String... params) {
-        if((playlistname == null && playlistid == null)) return null;
+        String  playlistid = null;
+        if((playlistname == null)) return null;
         api = new SpotifyApi();
         spotify = api.getService();
         api.setAccessToken(token);
+        Log.e("Test", "in null");
+        Pager<PlaylistSimple> playlistPager = spotify.getMyPlaylists();
+        if(playlistPager == null || playlistPager.items.size() == 0)return null;
+        List<PlaylistSimple> playlists = playlistPager.items;
+        for (PlaylistSimple p : playlists) {
+            Log.e("TEST", p.name + " - " + p.id );
+            Log.e("TEST", playlistname );
+            if(p.name.toLowerCase().equals(playlistname.toLowerCase())){
+                Log.e("TEST", "playstid set " + p.name + "id: " + p.id);
+                playlistid = p.id;
+                break;
+            }
+        }
+//            @Override
+//            public void success(Pager<PlaylistSimple> playlistPager, Response response) {
+//                Log.d("TEST", "Got the playlists");
+//                List<PlaylistSimple> playlists = playlistPager.items;
+//                for (PlaylistSimple p : playlists) {
+//                    Log.e("TEST", p.name + " - " + p.id );
+//                    Log.e("TEST", playlistname );
+//                    if(p.name.toLowerCase().equals(playlistname.toLowerCase())){
+//                        Log.e("TEST", "playstid set " + p.name + "id: " + p.id);
+//                        playlistid = p.id;
+//                        break;
+//                    }
+//                }
+//            }
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.e("TEST", "Could not get playlists");
+//            }
+//        });
+        Log.e("TEST", "PlaylistID: " + playlistid);
         if(playlistid == null || playlistid.equals("")){
-            Log.e("Test", "in null");
-            spotify.getMyPlaylists(new Callback<Pager<PlaylistSimple>>() {
-                @Override
-                public void success(Pager<PlaylistSimple> playlistPager, Response response) {
-                    Log.d("TEST", "Got the playlists");
-                    List<PlaylistSimple> playlists = playlistPager.items;
-                    for (PlaylistSimple p : playlists) {
-                        Log.e("TEST", p.name + " - " + p.id );
-                        Log.e("TEST", playlistname );
-                        if(p.name.toLowerCase().equals(playlistname.toLowerCase())){
-                            Log.e("TEST", "playstid set");
-                            playlistid = p.id;
-                            break;
-                        }
-                    }
-                }
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e("TEST", "Could not get playlists");
-                }
-            });
+            return null;
         }
         Map<String, Object> options = new HashMap<String, Object>();
 //        options.put("name", "testplaylist");
@@ -108,7 +125,6 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
 
 
 
-        Log.e("TEST", "PlaylistID: " + playlistid);
         spotify.replaceTracksInPlaylist(owner, playlistid, sb.toString(), queryParameters);
 
 //        spotify.addTracksToPlaylist(owner, playlistid, queryParameters, options);
