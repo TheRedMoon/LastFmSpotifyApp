@@ -1,6 +1,8 @@
 package com.example.pascal.apitest.util;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pascal.apitest.R;
+import com.example.pascal.apitest.model.User;
 
 import java.util.ArrayList;
 
@@ -55,7 +58,20 @@ public class DataBaseAdaptar extends BaseAdapter implements ListAdapter {
 
         //Handle TextView and display string from your list
         TextView listItemText = (TextView)view.findViewById(R.id.text1);
-        listItemText.setText(list.get(position));
+        String user = list.get(position);
+        Log.e("Test0", user);
+        listItemText.setText(user);
+        Log.e("Test1", user);
+        String parts[] = user.split("-");
+        if(BaseApp.userlistDAO.selectByUserName(parts[1].trim()).size() != 0){
+            User u = BaseApp.userlistDAO.selectByUserName(parts[1].trim()).get(0);
+            if(u.getActive() != 0){
+                listItemText.setTextColor(Color.GREEN);
+            }
+            else{
+                listItemText.setTextColor(Color.RED);
+            }
+        }
 
         //Handle buttons and add onClickListeners
         Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
@@ -66,9 +82,9 @@ public class DataBaseAdaptar extends BaseAdapter implements ListAdapter {
             public void onClick(View v) {
                 //do something
                 String user = list.get(position);
-                String parts[] = user.split(" ", 2);
+                String parts[] = user.split("-");
                 list.remove(position); //or some other task
-                deleteUser(parts[0]);
+                deleteUser(parts[1].trim());
                 notifyDataSetChanged();
             }
         });
@@ -83,9 +99,16 @@ public class DataBaseAdaptar extends BaseAdapter implements ListAdapter {
         return view;
     }
 
-    private void deleteUser(String realname) {
-        if(!realname.equals("")) {
-            BaseApp.userlistDAO.deleteByRealName(realname);
+    private void deleteUser(String username) {
+        if(!username.equals("")) {
+            BaseApp.userlistDAO.deleteByUserName(username);
         }
     }
+
+    public void refreshUsers(ArrayList<String> users) {
+        this.list.clear();
+        this.list.addAll(users);
+        notifyDataSetChanged();
+    }
+
 }

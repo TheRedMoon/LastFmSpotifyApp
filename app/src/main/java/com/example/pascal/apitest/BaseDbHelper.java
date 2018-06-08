@@ -16,7 +16,8 @@ public class BaseDbHelper extends SQLiteOpenHelper {
             + "CREATE TABLE users ("
             + "ID integer primary key autoincrement,"
             + "user_name VARCHAR(20),"
-            + "real_name VARCHAR(30)"
+            + "real_name VARCHAR(30),"
+            + "active integer"
             + ");";
 
     private static final String CREATE_PLAYLIST = ""

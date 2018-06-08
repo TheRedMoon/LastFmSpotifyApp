@@ -47,8 +47,14 @@ public class UserlistDAO {
         ContentValues values = new ContentValues();
         values.put("user_name", user.getUsername());
         values.put("real_name", user.getRealname());
+        values.put("active", user.getActive());
         // long insertId =
         database.insert(TABLE_NAME, null, values);
+    }
+
+    public void update(User u) {
+        ContentValues values = fillContentValues(u);
+        database.update(TABLE_NAME, values, "user_name=?" , new String[]{u.getUsername()});
     }
 
     public void deleteByUserName(String name) {
@@ -121,6 +127,20 @@ public class UserlistDAO {
         return user;
     }
 
+
+    /**
+     * Fills the ContentValues for inserting or updating
+     *
+     * @return
+     */
+    private ContentValues fillContentValues(User u) {
+        ContentValues values = new ContentValues();
+        values.put("user_name", u.getUsername());
+        values.put("real_name", u.getRealname());
+        values.put("active", u.getActive());
+        return values;
+    }
+
      /**
      * Cursor method
      *
@@ -130,10 +150,12 @@ public class UserlistDAO {
     protected User fillCursor(Cursor c) {
         String username = c.getString(c.getColumnIndex("user_name"));
         String realname = c.getString(c.getColumnIndex("real_name"));
+        int active = c.getInt(c.getColumnIndex("active"));
 
         User u = new User();
         u.setRealname(realname);
         u.setUsername(username);
+        u.setActive(active);
         return u;
     }
 }

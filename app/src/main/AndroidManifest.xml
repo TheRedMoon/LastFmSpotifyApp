@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
         </activity>
         <activity android:name=".activities.PlaylistAct">
         </activity>
@@ -20,12 +20,12 @@
         <activity android:name=".activities.UserlistAct">
         </activity>
         <activity
-            android:name=".ListViewActivity"
+            android:name=".activities.ListViewActivity"
             android:label="Songs" />
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".LoginActivity"
+        <activity android:name=".activities.LoginActivity"
             android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -42,7 +42,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PrefAct"></activity>
+        <activity android:name=".activities.PrefAct"></activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ package com.example.pascal.apitest.model;
 public class User {
     private String username;
     private String realname;
+    private int active = 1;
 
     public User(String username, String realname) {
         this.username = username;
@@ -35,5 +36,14 @@ public class User {
     @Override
     public String toString(){
         return realname + " - " + username;
+    }
+
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 }

@@ -55,61 +55,40 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
         api = new SpotifyApi();
         spotify = api.getService();
         api.setAccessToken(token);
-        Log.e("Test", "in null");
         Pager<PlaylistSimple> playlistPager = spotify.getMyPlaylists();
         if(playlistPager == null || playlistPager.items.size() == 0)return null;
         List<PlaylistSimple> playlists = playlistPager.items;
         for (PlaylistSimple p : playlists) {
-            Log.e("TEST", p.name + " - " + p.id );
-            Log.e("TEST", playlistname );
             if(p.name.toLowerCase().equals(playlistname.toLowerCase())){
                 Log.e("TEST", "playstid set " + p.name + "id: " + p.id);
                 playlistid = p.id;
                 break;
             }
         }
-//            @Override
-//            public void success(Pager<PlaylistSimple> playlistPager, Response response) {
-//                Log.d("TEST", "Got the playlists");
-//                List<PlaylistSimple> playlists = playlistPager.items;
-//                for (PlaylistSimple p : playlists) {
-//                    Log.e("TEST", p.name + " - " + p.id );
-//                    Log.e("TEST", playlistname );
-//                    if(p.name.toLowerCase().equals(playlistname.toLowerCase())){
-//                        Log.e("TEST", "playstid set " + p.name + "id: " + p.id);
-//                        playlistid = p.id;
-//                        break;
-//                    }
-//                }
-//            }
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.e("TEST", "Could not get playlists");
-//            }
-//        });
-        Log.e("TEST", "PlaylistID: " + playlistid);
+        String owner = spotify.getMe().id;
+        if(playlistid == null || playlistid.equals("")){
+            final Map<String, Object> optionsplaylist = new HashMap<String, Object>();
+            optionsplaylist.put("name", playlistname);
+            optionsplaylist.put("public", true);
+            spotify.createPlaylist(owner, optionsplaylist); //create playlist when playlist not found
+        }
+        playlistPager = spotify.getMyPlaylists();
+        if(playlistPager == null || playlistPager.items.size() == 0)return null;
+        playlists = playlistPager.items;
+        for (PlaylistSimple p : playlists) {
+            if(p.name.toLowerCase().equals(playlistname.toLowerCase())){
+                Log.e("TEST", "playstid set " + p.name + "id: " + p.id);
+                playlistid = p.id;
+                break;
+            }
+        }
         if(playlistid == null || playlistid.equals("")){
             return null;
         }
         Map<String, Object> options = new HashMap<String, Object>();
-//        options.put("name", "testplaylist");
-//        options.put("public", true);
-        String owner = spotify.getMe().id;
-//        spotify.createPlaylist(owner, options);
-//        options = new HashMap<String, Object>();
         final List<String> trackUris = getTracks();
         if(trackUris == null) return null;
-
         final int position = 0;
-//        String trackUri1 = "spotify:track:6BSNHSXrOVNnRcm85D4YIt";
-//        String trackUri2=  "spotify:track:4z88dsPMPlCPakuhBYkcuP";
-//        final List<String> trackUris = Arrays.asList(trackUri1, trackUri2);
-
-//        List<List<String>> chunks = new ArrayList<List<String>>();
-//        if(trackUris.size() > 50){
-//            chunks = Lists.partition(trackUris, 50);
-//        }
-
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i< trackUris.size(); i++){
             String s = trackUris.get(i);

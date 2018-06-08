@@ -1,0 +1,3 @@
+- update realtime the lists
+- active users easier
+- mainscreen GUI

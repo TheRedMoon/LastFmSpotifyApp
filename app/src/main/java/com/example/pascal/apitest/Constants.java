@@ -4,7 +4,7 @@ package com.example.pascal.apitest;
  * Created by jeroen on 6-2-2018.
  */
 
-class Constants {
+public class Constants {
     public static final String ACTION_DONE_FETCHING_WEATHER = BuildConfig.APPLICATION_ID + ".ACTION_DONE_FETCHING_WEATHER";
     public static final String ACTION_DONE_FETCHING_LASTFM = BuildConfig.APPLICATION_ID + ".ACTION_DONE_FETCHING_LASTFM";;
     public static final String ACTION_DONE_FETCHING_ETA =   BuildConfig.APPLICATION_ID + ".ACTION_DONE_FETCHING_ETA";
