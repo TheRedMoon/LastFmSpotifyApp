@@ -23,12 +23,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BaseApp extends Application{
     public static PlaylistDAO playlistDAO;
     public static UserlistDAO userlistDAO;
+    public static String token;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Stetho.initializeWithDefaults(this);
         openDaos();
+        String temp = PrefUtils.getStringPreference(this, "token", "");
+        if(!temp.equals("")){
+            token = temp;
+        }
     }
 
     private void openDaos() {
