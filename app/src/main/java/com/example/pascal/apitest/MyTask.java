@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.pascal.apitest.activities.PlaylistAct;
+import com.example.pascal.apitest.util.BaseApp;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -34,15 +35,12 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
     private final String playlistname;
     private ArrayList<String> artists;
     private SpotifyService spotify;
-    private String token, playlistid;
     private SpotifyApi api;
     private ArrayList<String> songs;
     private List<String> users;
 
-    public MyTask(String token, ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistname) {
-//        this.playlistid = playlistname;
+    public MyTask( ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistname) {
         this.playlistname = playlistname;
-        this.token = token;
         this.songs = tracks;
         this.artists = artists;
         this.users = users;
@@ -54,7 +52,7 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
         if((playlistname == null)) return null;
         api = new SpotifyApi();
         spotify = api.getService();
-        api.setAccessToken(token);
+        api.setAccessToken(BaseApp.token);
         Pager<PlaylistSimple> playlistPager = spotify.getMyPlaylists();
         if(playlistPager == null || playlistPager.items.size() == 0)return null;
         List<PlaylistSimple> playlists = playlistPager.items;

@@ -57,10 +57,10 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     private Button getLastfm, setcontraints;
     private Spinner periodLastfm;
     private IntentFilter intentFilter;
-    private String weather, token;
+    private String weather;
     ArrayList<String> tracks;
     ArrayList<String> artists;
-    private MenuItem weatherbutton;
+    private MenuItem settingsbutton;
     private static final String CLIENT_ID = "a2bcc3e457d74e66b0de917374839125";
     private static final String REDIRECT_URI = "my-lastfm-app://callback";
     private List<String> users;
@@ -108,10 +108,6 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
             }
         });
 
-        Intent intent = getIntent();
-        if(intent.getStringExtra(Constants.EXTRA_TOKEN) != null){
-            token = intent.getStringExtra(Constants.EXTRA_TOKEN);
-        }
         setcontraints =  findViewById(R.id.set_btn);
 
         setcontraints.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     public boolean onCreateOptionsMenu( Menu menu ) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate( R.menu.fragment_stops, menu);
-        weatherbutton = menu.findItem(R.id.menu_weather);
+        settingsbutton = menu.findItem(R.id.menu_settings);
         return true;
     }
 
@@ -208,19 +204,19 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
         if( weather != null) { //https://openweathermap.org/weather-conditions
             switch(weather){
                 case "Clouds":
-                    weatherbutton.setIcon(R.drawable.cloudy);
+                    settingsbutton.setIcon(R.drawable.cloudy);
                     invalidateOptionsMenu();
                     break;
                 case "Sunny":
-                    weatherbutton.setIcon(R.drawable.sunny);
+                    settingsbutton.setIcon(R.drawable.sunny);
                     invalidateOptionsMenu();
                     break;
                 case "Rain":
-                    weatherbutton.setIcon(R.drawable.rainy);
+                    settingsbutton.setIcon(R.drawable.rainy);
                     invalidateOptionsMenu();
                     break;
                 case "Clear":
-                    weatherbutton.setIcon(R.drawable.sunny);
+                    settingsbutton.setIcon(R.drawable.sunny);
                     invalidateOptionsMenu();
                     break;
             }
@@ -264,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
                     }
                     ArrayList<String> songs = intent.getStringArrayListExtra(Constants.EXTRA_LASTFM);
                     setTracksAndArtists(songs);
-                    new MyTask(token, tracks, artists, users, playlistname).execute("");
+                    new MyTask(tracks, artists, users, playlistname).execute("");
                     Intent i = new Intent(context, ListViewActivity.class);
                     i.putExtra(ARRAYLIST, songs);
                     startActivity(i);

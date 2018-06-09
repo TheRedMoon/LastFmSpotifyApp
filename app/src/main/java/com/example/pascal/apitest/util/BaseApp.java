@@ -1,6 +1,7 @@
 package com.example.pascal.apitest.util;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.DisplayMetrics;
@@ -44,4 +45,8 @@ public class BaseApp extends Application{
     }
 
 
+    public static void setToken(Context context, String newtoken) {
+        PrefUtils.setStringPreference(context, "token", newtoken);
+        token = newtoken;
+    }
 }

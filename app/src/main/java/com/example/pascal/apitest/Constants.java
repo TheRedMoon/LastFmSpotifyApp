@@ -13,9 +13,7 @@ public class Constants {
     public static final String EXTRA_LASTFM = BuildConfig.APPLICATION_ID + ".EXTRA_LASTFM";
     public static final String EXTRA_TRACKS = BuildConfig.APPLICATION_ID + ".EXTRA_TRACKS";
     public static final String EXTRA_ARTIST = BuildConfig.APPLICATION_ID + ".EXTRA_ARTISTS";
+    public static final String EXTRA_PERIOD = BuildConfig.APPLICATION_ID + ".EXTRA_ARTISTS";
+    public static final String EXTRA_LIMIT = BuildConfig.APPLICATION_ID + ".EXTRA_ARTISTS";
     public static final String EXTRA_TOKEN = BuildConfig.APPLICATION_ID + ".EXTRA_TOKEN";
-    public static final String[] Playlists = {"54no0MzUCEpkg0EKVqkduz", "4MkQ5U9JoSlyR8Gcrw0tAU"} ;
 }
-//7BO66qnvtJ7vi4c4O5836Y = brams afspeellijst
-//4MkQ5U9JoSlyR8Gcrw0tAU = mijn afspeellijst
-//54no0MzUCEpkg0EKVqkduz = mijn algemene afspeellijst
