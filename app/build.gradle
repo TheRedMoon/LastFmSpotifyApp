@@ -44,5 +44,9 @@ dependencies {
     //joda time for datetime objects
     implementation 'joda-time:joda-time:2.9.9'
 
+
+    implementation 'com.android.support:cardview-v7:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+
 //    compile 'com.spotify.android:auth:1.0.0-alpha'
 }
