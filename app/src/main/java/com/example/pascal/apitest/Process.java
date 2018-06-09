@@ -74,7 +74,7 @@ public class Process extends AsyncTask<String, Void, Void> {
     protected void onPreExecute() {
         progressDialog = new ProgressDialog(context);
         progressDialog.setCancelable(true);
-        progressDialog.setMessage(context.getResources().getString(R.string.process_eta_title));
+        progressDialog.setMessage(context.getResources().getString(R.string.fetching_lastfm));
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
     }

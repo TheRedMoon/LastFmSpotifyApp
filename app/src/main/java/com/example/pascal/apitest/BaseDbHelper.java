@@ -10,14 +10,14 @@ public class BaseDbHelper extends SQLiteOpenHelper {
     private static BaseDbHelper sInstance = null;
 
     private static final String DATABASE_NAME = "spotifysync.db";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
 
     private static final String CREATE_USERS = ""
             + "CREATE TABLE users ("
             + "ID integer primary key autoincrement,"
             + "user_name VARCHAR(20),"
             + "real_name VARCHAR(30),"
-            + "active integer"
+            + "active INTEGER"
             + ");";
 
     private static final String CREATE_PLAYLIST = ""

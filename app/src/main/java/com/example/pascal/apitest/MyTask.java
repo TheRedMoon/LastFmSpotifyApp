@@ -1,6 +1,7 @@
 package com.example.pascal.apitest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,15 +34,18 @@ import retrofit.client.Response;
 
 public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
     private final String playlistname;
+//    private final Context context;
     private ArrayList<String> artists;
+    private ArrayList<String> notFoundSongs;
     private SpotifyService spotify;
     private SpotifyApi api;
     private ArrayList<String> songs;
     private List<String> users;
 
-    public MyTask( ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistname) {
+    public MyTask(ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistname) {
         this.playlistname = playlistname;
         this.songs = tracks;
+//        this.context = context;
         this.artists = artists;
         this.users = users;
     }
@@ -52,6 +56,7 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
         if((playlistname == null)) return null;
         api = new SpotifyApi();
         spotify = api.getService();
+        notFoundSongs = new ArrayList<>();
         api.setAccessToken(BaseApp.token);
         Pager<PlaylistSimple> playlistPager = spotify.getMyPlaylists();
         if(playlistPager == null || playlistPager.items.size() == 0)return null;
@@ -149,12 +154,17 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
                         }
                     }
                 }
+                if(!finished){
+                    notFoundSongs.add(songs.get(i));
+                }
             }
         }
 //        String s = result.get(result.size()-1);
 //        result.remove(result.size()-1);
 //        String string = s.replace(",", "");
 //        result.add(string);
+//        Intent i = new Intent();
+//        context.sendBroadcast(i);
         return result;
     }
 

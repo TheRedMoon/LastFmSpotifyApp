@@ -1,62 +1,173 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical" >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose a period"
-        android:textSize="25sp"/>
-    <Spinner
-        android:id="@+id/period_lastfm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Number of songs:"
-        android:textSize="25sp"/>
-    <EditText
-        android:id="@+id/limit_lastfm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1e1f22"
+    android:orientation="vertical"
+    >
 
-    <Button
-        android:id="@+id/lastfm_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Last Fm songs" />
+    <LinearLayout android:orientation="vertical"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
 
-    <Button
-        android:id="@+id/set_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Set spotify constants" />
-
-    <LinearLayout android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:orientation="horizontal">
-
-        <TextView android:layout_width="0dp"
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:text="Playlist active: "/>
-
-        <TextView
-            android:id="@+id/current_playlist"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:text="Please set playlist by pressing button above "
+            android:layout_gravity="right"
+            android:text="@string/settings"
             />
+
+        <LinearLayout
+            android:layout_weight="3"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="fill_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/info"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/lastfm_btn"
+            android:layout_width="fill_parent">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                card_view:cardBackgroundColor="@color/cardview_light_background"
+                app:cardCornerRadius="25dp"
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:elevation="12dp"
+                android:thicknessRatio="1.9"
+                card_view:contentPadding="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:text="@string/create_playlist" />
+
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/manage_playlists"
+            android:layout_width="fill_parent">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                card_view:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="25dp"
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:elevation="12dp"
+                android:thicknessRatio="1.9"
+                card_view:contentPadding="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:text="@string/manage_playlist" />
+
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/manage_users"
+            android:layout_width="fill_parent">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                card_view:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="25dp"
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:elevation="12dp"
+                android:thicknessRatio="1.9"
+                card_view:contentPadding="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:text="@string/manage_users" />
+
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_marginBottom="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/options"
+            android:layout_width="fill_parent">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                card_view:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="25dp"
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:elevation="12dp"
+                android:thicknessRatio="1.9"
+                card_view:contentPadding="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:text="@string/options" />
+
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+
+
     </LinearLayout>
 
 </LinearLayout>

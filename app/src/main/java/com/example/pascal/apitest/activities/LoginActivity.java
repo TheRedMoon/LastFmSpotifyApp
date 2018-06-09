@@ -8,8 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.pascal.apitest.Constants;
 import com.example.pascal.apitest.R;
+import com.example.pascal.apitest.util.BaseApp;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                 case TOKEN:
                     Log.e("Token achieved", "Success");
                     Intent i = new Intent(this, MainActivity.class);
-                    i.putExtra(Constants.EXTRA_TOKEN, response.getAccessToken());
+                    BaseApp.setToken(LoginActivity.this, response.getAccessToken());
                     startActivity(i);
                     // Handle successful response
                     break;

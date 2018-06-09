@@ -7,6 +7,7 @@
     <string name="open_weather_maps_app_id">a4947da5f05e65aa8d0e611b5f74630b</string>
     <string name="lastfm_api_key">355c053e2d6a85a1eeff54d923a36e00</string>
     <string name="place_not_found">Kon de plaats niet vinden</string>
+    <string name="fetching_lastfm">fetching LastFmM..</string>
 
     <!--playlist-->
     <string name="create_playlist">create playlist</string>
@@ -20,6 +21,10 @@
 
     <!--settings-->
     <string name="settings">Settings</string>
+
+
+    <!--buttons-->
+    <string name="confirm">confirm</string>
 
 \
 </resources>

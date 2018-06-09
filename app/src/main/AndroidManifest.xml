@@ -42,7 +42,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PrefAct"></activity>
+        <activity android:name=".activities.OptionsActivity"></activity>
     </application>
 
 </manifest>

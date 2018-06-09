@@ -16,16 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
-//spotify shit:
 import com.example.pascal.apitest.Constants;
 import com.example.pascal.apitest.MyTask;
 import com.example.pascal.apitest.Process;
@@ -41,28 +37,31 @@ import com.spotify.sdk.android.player.PlayerEvent;
 import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
+
+//spotify shit:
+
 //http://kaaes.github.io/spotify-web-api-android/javadoc/
 //https://github.com/thelinmichael/spotify-web-api-java/blob/master/examples/data/playlists/CreatePlaylistExample.java
 //https://github.com/kaaes/spotify-web-api-android
-//https://github.com/kaaes/spotify-web-api-android/blob/master/spotify-api/src/test/java/kaaes/spotify/webapi/android/SpotifyServiceTest.java
 public class MainActivity extends AppCompatActivity implements SpotifyPlayer.NotificationCallback, ConnectionStateCallback {
     public static final String ARRAYLIST = "ARRAYLIST";
     Context context = this;
     private TextView txtEta;
     private EditText limitLastfm, playlistfield;
-    private Button getLastfm, setcontraints;
-    private Spinner periodLastfm;
+    private LinearLayout getLastfm, manageUsers, managePlaylists, manageOptions ;
     private IntentFilter intentFilter;
-    private String weather, token;
+    private String weather;
     ArrayList<String> tracks;
     ArrayList<String> artists;
-    private MenuItem weatherbutton;
+    private MenuItem settingsbutton;
     private static final String CLIENT_ID = "a2bcc3e457d74e66b0de917374839125";
     private static final String REDIRECT_URI = "my-lastfm-app://callback";
     private List<String> users;
     private Player mPlayer;
     private static final int REQUEST_CODE = 1337;
-    private String period;
+    private String period, limit;
     private String playlistname;
 
     //keytool -list -v -keystore "C:\Users\Jeroen\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android
@@ -76,46 +75,33 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
         tracks = new ArrayList<>();
         artists = new ArrayList<>();
         getLastfm = findViewById(R.id.lastfm_btn);
-        periodLastfm = findViewById(R.id.period_lastfm);
-        limitLastfm =  findViewById(R.id.limit_lastfm);
-        txtEta = findViewById(R.id.current_playlist);
-        playlistname = PrefUtils.getStringPreference(MainActivity.this,"playlistname", null);
-        if(playlistname!= null)        txtEta.setText(playlistname);
-        period = "overall";
-
-        ArrayList<String> periods = new ArrayList<String>( );
-        periods.add("overall");
-        periods.add("7day");
-        periods.add("1month");
-        periods.add("3month");
-        periods.add("6month");
-        periods.add("12month");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, periods);
-        periodLastfm.setAdapter(adapter);
-        periodLastfm.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        managePlaylists = findViewById(R.id.manage_playlists);
+        manageUsers = findViewById(R.id.manage_users);
+        manageOptions = findViewById(R.id.options);
+        txtEta = findViewById(R.id.info);
+        manageOptions.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                period =periodLastfm.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        Intent intent = getIntent();
-        if(intent.getStringExtra(Constants.EXTRA_TOKEN) != null){
-            token = intent.getStringExtra(Constants.EXTRA_TOKEN);
-        }
-        setcontraints =  findViewById(R.id.set_btn);
-
-        setcontraints.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), PrefAct.class);
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, OptionsActivity.class);
                 startActivity(i);
             }
         });
+        managePlaylists.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, PlaylistAct.class);
+                startActivity(i);
+            }
+        });
+
+        manageUsers.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, UserlistAct.class);
+                startActivity(i);
+            }
+        });
+
+      setValues();
+
 
         getLastfm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -126,22 +112,14 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
                 }
                 else{
                     for(User u: userdatabase){
-                        if(u.getActive() != 0) {
-                            users.add(u.getUsername());
-                        }
+                        users.add(u.getUsername());
                     }
                 }
-                boolean limiton = !limitLastfm.getText().toString().equals("");
-                //todo make preference playlist or quick playlist chooser.
-                if(limiton ){
-                    String limit = limitLastfm.getText().toString();
-                    new Process(context, new RemoteFetch() , users, period, limit).execute();
-                }
-                else{
-                    new Process(context, new RemoteFetch() , users, period, "25").execute();
-                }
+               new Process(context, new RemoteFetch() , users, period, limit).execute();
             }
         });
+
+
 
 
         intentFilter = new IntentFilter();
@@ -155,6 +133,24 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
 //        AuthenticationClient.openLoginInBrowser(this, request);
     }
 
+    private void setValues() {
+        playlistname = PrefUtils.getStringPreference(MainActivity.this,"playlistname", "");
+        if(!playlistname.equals(""))        txtEta.setText(playlistname);
+        period = PrefUtils.getStringPreference(MainActivity.this,Constants.EXTRA_PERIOD, "");
+        if(!period.equals(""))        txtEta.setText(playlistname);
+        else{
+            period = "overall";
+
+        }
+        limit = PrefUtils.getStringPreference(MainActivity.this,Constants.EXTRA_LIMIT, "");
+        if(!limit.equals("")) {
+            txtEta.setText(playlistname);
+        }
+        else{
+            limit = "25";
+        }
+    }
+
     @Override
     public void onPause() {
         try {        unregisterReceiver(broadcastReciever);
@@ -164,9 +160,9 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
 
     @Override
     public void onResume() {
+        super.onResume();
         registerReceiver(broadcastReciever, intentFilter);
         if(playlistname!= null)        txtEta.setText(playlistname);
-        super.onResume();
     }
 
 //    @Override
@@ -198,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     public boolean onCreateOptionsMenu( Menu menu ) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate( R.menu.fragment_stops, menu);
-        weatherbutton = menu.findItem(R.id.menu_weather);
+        settingsbutton = menu.findItem(R.id.menu_settings);
         return true;
     }
 
@@ -206,19 +202,19 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
         if( weather != null) { //https://openweathermap.org/weather-conditions
             switch(weather){
                 case "Clouds":
-                    weatherbutton.setIcon(R.drawable.cloudy);
+                    settingsbutton.setIcon(R.drawable.cloudy);
                     invalidateOptionsMenu();
                     break;
                 case "Sunny":
-                    weatherbutton.setIcon(R.drawable.sunny);
+                    settingsbutton.setIcon(R.drawable.sunny);
                     invalidateOptionsMenu();
                     break;
                 case "Rain":
-                    weatherbutton.setIcon(R.drawable.rainy);
+                    settingsbutton.setIcon(R.drawable.rainy);
                     invalidateOptionsMenu();
                     break;
                 case "Clear":
-                    weatherbutton.setIcon(R.drawable.sunny);
+                    settingsbutton.setIcon(R.drawable.sunny);
                     invalidateOptionsMenu();
                     break;
             }
@@ -262,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
                     }
                     ArrayList<String> songs = intent.getStringArrayListExtra(Constants.EXTRA_LASTFM);
                     setTracksAndArtists(songs);
-                    new MyTask(token, tracks, artists, users, playlistname).execute("");
+                    new MyTask(tracks, artists, users, playlistname).execute("");
                     Intent i = new Intent(context, ListViewActivity.class);
                     i.putExtra(ARRAYLIST, songs);
                     startActivity(i);
