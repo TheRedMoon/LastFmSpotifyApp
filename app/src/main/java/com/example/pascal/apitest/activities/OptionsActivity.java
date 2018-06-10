@@ -47,13 +47,16 @@ public class OptionsActivity extends AppCompatActivity {
         overwrite = findViewById(R.id.overwrite_playlist);
 //        playlist =  findViewById(R.id.txt_playlist);
 
+        overwrite.setChecked(PrefUtils.getBooleanPreference(OptionsActivity.this, Constants.EXTRA_REPLACE, overwrite.isChecked()));
+
         confirm.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 PrefUtils.setStringPreference(OptionsActivity.this, Constants.EXTRA_PERIOD, period);
-                if(!limit.equals("")) {
+                if(editLimit != null && !editLimit.toString().equals("")) {
                     limit = editLimit.getText().toString();
                 }
                 PrefUtils.setStringPreference(OptionsActivity.this, Constants.EXTRA_LIMIT, limit);
+                PrefUtils.setBooleanPreference(OptionsActivity.this, Constants.EXTRA_REPLACE, overwrite.isChecked());
                 finish();
 
             }
@@ -98,8 +101,8 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     private void setDefaultValue() {
-        String limitdefaultvalue = PrefUtils.getStringPreference(OptionsActivity.this, Constants.EXTRA_PERIOD, "25");
-        String perioddefaultvaulue = PrefUtils.getStringPreference(OptionsActivity.this, Constants.EXTRA_PERIOD, "25");
+        String limitdefaultvalue = PrefUtils.getStringPreference(OptionsActivity.this, Constants.EXTRA_LIMIT, "25");
+        String perioddefaultvaulue = PrefUtils.getStringPreference(OptionsActivity.this, Constants.EXTRA_PERIOD, "overall");
         ArrayAdapter myAdap = (ArrayAdapter) periodLastfm.getAdapter(); //cast to an ArrayAdapter
         int spinnerPosition = myAdap.getPosition(perioddefaultvaulue);
         periodLastfm.setSelection(spinnerPosition);

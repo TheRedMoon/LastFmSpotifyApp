@@ -70,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        String temp = PrefUtils.getStringPreference(this, Constants.EXTRA_TOKEN, "");
+//        if(temp.equals("")){
+//            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+//            startActivity(i);
+//        }
         ActionBar actionBar = getSupportActionBar();
         artists = new ArrayList<String>();
         tracks = new ArrayList<>();
@@ -136,19 +141,10 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     private void setValues() {
         playlistname = PrefUtils.getStringPreference(MainActivity.this,"playlistname", "");
         if(!playlistname.equals(""))        txtEta.setText(playlistname);
-        period = PrefUtils.getStringPreference(MainActivity.this,Constants.EXTRA_PERIOD, "");
-        if(!period.equals(""))        txtEta.setText(playlistname);
-        else{
-            period = "overall";
+        period = PrefUtils.getStringPreference(MainActivity.this,Constants.EXTRA_PERIOD, "overall");
 
-        }
-        limit = PrefUtils.getStringPreference(MainActivity.this,Constants.EXTRA_LIMIT, "");
-        if(!limit.equals("")) {
-            txtEta.setText(playlistname);
-        }
-        else{
-            limit = "25";
-        }
+        limit = PrefUtils.getStringPreference(MainActivity.this,Constants.EXTRA_LIMIT, "25" );
+
     }
 
     @Override
@@ -161,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
     @Override
     public void onResume() {
         super.onResume();
+        setValues();
         registerReceiver(broadcastReciever, intentFilter);
         if(playlistname!= null)        txtEta.setText(playlistname);
     }
@@ -258,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
                     }
                     ArrayList<String> songs = intent.getStringArrayListExtra(Constants.EXTRA_LASTFM);
                     setTracksAndArtists(songs);
-                    new MyTask(tracks, artists, users, playlistname).execute("");
+                    new MyTask(tracks, artists, users, playlistname, PrefUtils.getBooleanPreference(MainActivity.this, Constants.EXTRA_REPLACE, false)).execute("");
                     Intent i = new Intent(context, ListViewActivity.class);
                     i.putExtra(ARRAYLIST, songs);
                     startActivity(i);

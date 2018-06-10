@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.pascal.apitest.Constants;
 import com.example.pascal.apitest.R;
 import com.example.pascal.apitest.util.BaseApp;
+import com.example.pascal.apitest.util.PrefUtils;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -23,9 +25,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!PrefUtils.getStringPreference(this, Constants.EXTRA_TOKEN, "").equals("")){
+            Log.e("Token", "The token " + PrefUtils.getStringPreference(this, Constants.EXTRA_TOKEN, "") );
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+        }
         setContentView(R.layout.activity_login);
         login = findViewById(R.id.login_btn);
-        skip = findViewById(R.id.skip_btn);
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -38,13 +44,6 @@ public class LoginActivity extends AppCompatActivity {
                 AuthenticationClient.openLoginInBrowser(LoginActivity.this, request);
             }
         });
-        skip.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
-            }
-        });
-
     }
 
     protected void onNewIntent(Intent intent) {

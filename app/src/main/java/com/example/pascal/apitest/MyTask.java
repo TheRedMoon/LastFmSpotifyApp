@@ -1,17 +1,13 @@
 package com.example.pascal.apitest;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.pascal.apitest.activities.PlaylistAct;
 import com.example.pascal.apitest.util.BaseApp;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +15,9 @@ import java.util.Map;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.Playlist;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.TracksPager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by Jeroen on 8-3-2018.
@@ -33,8 +25,10 @@ import retrofit.client.Response;
 //https://programtalk.com/java-api-usage-examples/kaaes.spotify.webapi.android.models.Playlist/
 
 public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
+    private static final String TAG = "MyTask";
     private final String playlistname;
-//    private final Context context;
+    private final boolean overwrite;
+    //    private final Context context;
     private ArrayList<String> artists;
     private ArrayList<String> notFoundSongs;
     private SpotifyService spotify;
@@ -42,10 +36,11 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
     private ArrayList<String> songs;
     private List<String> users;
 
-    public MyTask(ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistname) {
+    public MyTask(ArrayList<String> tracks, ArrayList<String> artists, List<String> users , String playlistname, boolean overwrite) {
         this.playlistname = playlistname;
         this.songs = tracks;
 //        this.context = context;
+        this.overwrite = overwrite;
         this.artists = artists;
         this.users = users;
     }
@@ -88,34 +83,56 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
         if(playlistid == null || playlistid.equals("")){
             return null;
         }
-        Map<String, Object> options = new HashMap<String, Object>();
-        final List<String> trackUris = getTracks();
-        if(trackUris == null) return null;
-        final int position = 0;
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i< trackUris.size(); i++){
-            String s = trackUris.get(i);
-            sb.append(s);
-            if(i != trackUris.size()-1)
-            sb.append(",");
+        List<List<String>> songlist = new ArrayList<>();
+        List<List<String>> artistlist = new ArrayList<>();
+        Log.e(TAG, "SIZE SONGS: " + songs.size() + "SIZE ARTISTS: " + artists.size());
+        if(songs.size() > 50){
+            List<String> bigList = songs;
+            List<String> bigListartists = artists;
+            songlist = Lists.partition(bigList, 50);
+            artistlist = Lists.partition(bigListartists, 50);
+            songlist = Lists.reverse(songlist);
+            artistlist = Lists.reverse(artistlist);
+        }
+        else{
+            songlist.add(songs);
+            artistlist.add(artists);
+        }
+        Log.e("Test38", String.valueOf(songlist.size()));
+
+        for(int i = 0; i< songlist.size(); i++){
+            Log.e("Test40", String.valueOf(songlist.get(i).size()));
+            List<String> trackUris = getTracks(songlist.get(i), artistlist.get(i));
+            if(trackUris == null) return null;
+            int position = 0;
+            Map<String, Object> queryParameters = new HashMap<String, Object>();
+            queryParameters.put("position", String.valueOf(position));
+            if(i == 0 & !overwrite) {
+                StringBuilder sb = new StringBuilder();
+                for(int j = 0; j< trackUris.size(); j++){
+                    String s = trackUris.get(j);
+                    sb.append(s);
+                    if(j != trackUris.size()-1)
+                        sb.append(",");
+                }
+                Log.e("Test42", String.valueOf(trackUris.size()));
+                spotify.replaceTracksInPlaylist(owner, playlistid, sb.toString(), queryParameters);
+            }
+            else{
+                Map<String, Object> options = new HashMap<String, Object>();
+                options.put("uris", trackUris);
+                Log.e("Test44", String.valueOf(trackUris.size()));
+                spotify.addTracksToPlaylist(owner, playlistid, queryParameters, options);
+            }
         }
 
-        options.put("uris", trackUris);
 
-        final Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("position", String.valueOf(position));
-
-
-
-        spotify.replaceTracksInPlaylist(owner, playlistid, sb.toString(), queryParameters);
-
-//        spotify.addTracksToPlaylist(owner, playlistid, queryParameters, options);
 //        spotify.addTracksToPlaylist(owner, playlistid, options);
 //        Pager<PlaylistSimple> playlists = spotify.getPlaylists(spotify.getMe().id);
         return null;
     }
 
-    private List<String> getTracks() {
+    private List<String> getTracks(List<String> songs, List<String> artists) {
         List <String> result = new ArrayList<String>();
         if(songs == null) return null;
         for(int i = 0; i<songs.size(); i++){
@@ -131,15 +148,27 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
                 artists.set(i, "BIGBANG");
             }
             try{
-            tracks = spotify.searchTracks("track:"+songs.get(i)+" artist:" + artists.get(i));
+                tracks = spotify.searchTracks("track:"+songs.get(i)+" artist:" + artists.get(i));
             }
             catch (Exception e){
-                Log.e("Error", e.getMessage());
+                Log.e("error", e.getMessage());
+                Log.e(TAG, "rip tracksk going into fallbackmode");
+                if(e.getMessage().contains("429")){
+                    try {
+                        Thread.sleep(5*1000);
+                        tracks = spotify.searchTracks("track:"+songs.get(i)+" artist:" + artists.get(i));
+                        Log.e(TAG, "Tracks set");
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
             }
             if(tracks == null){
+                Log.e(TAG, "Task error" );
             }
             else{
                 List<Track> artist = tracks.tracks.items;
+                Log.e(TAG, String.valueOf(artist.size()));
                 int counter = 7;
                 if(artist.size() < 5){
                     counter = artist.size();
@@ -147,7 +176,7 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
                 for(int j = 0; j<artist.size(); j++){
                     if(!finished){
                         Log.e("Kots23", artist.get(j).artists.get(0).name + " other " + artists.get(i));
-                        if(artist.get(j).artists.get(0).name.toLowerCase().contains(artists.get(i).toLowerCase())){
+                        if(artist.get(j).artists.get(0).name.toLowerCase().equals(artists.get(i).toLowerCase())){
                             Log.e("Kots2", artist.get(j).uri);
                             result.add(artist.get(j).uri);
                             finished = true;

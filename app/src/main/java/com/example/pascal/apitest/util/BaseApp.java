@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.ViewConfiguration;
 
 import com.example.pascal.apitest.BuildConfig;
+import com.example.pascal.apitest.Constants;
 import com.example.pascal.apitest.dao.PlaylistDAO;
 import com.example.pascal.apitest.dao.UserlistDAO;
 import com.facebook.stetho.Stetho;
@@ -32,7 +33,7 @@ public class BaseApp extends Application{
         super.onCreate();
         Stetho.initializeWithDefaults(this);
         openDaos();
-        String temp = PrefUtils.getStringPreference(this, "token", "");
+        String temp = PrefUtils.getStringPreference(this, Constants.EXTRA_TOKEN, "");
         if(!temp.equals("")){
             token = temp;
         }
@@ -47,7 +48,7 @@ public class BaseApp extends Application{
 
 
     public static void setToken(Context context, String newtoken) {
-        PrefUtils.setStringPreference(context, "token", newtoken);
+        PrefUtils.setStringPreference(context, Constants.EXTRA_TOKEN, newtoken);
         token = newtoken;
     }
 }
