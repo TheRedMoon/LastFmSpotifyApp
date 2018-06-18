@@ -25,11 +25,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(!PrefUtils.getStringPreference(this, Constants.EXTRA_TOKEN, "").equals("")){
-            Log.e("Token", "The token " + PrefUtils.getStringPreference(this, Constants.EXTRA_TOKEN, "") );
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(i);
-        }
         setContentView(R.layout.activity_login);
         login = findViewById(R.id.login_btn);
 

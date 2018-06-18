@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
 //            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
 //            startActivity(i);
 //        }
-        ActionBar actionBar = getSupportActionBar();
         artists = new ArrayList<String>();
         tracks = new ArrayList<>();
         artists = new ArrayList<>();
@@ -117,9 +116,11 @@ public class MainActivity extends AppCompatActivity implements SpotifyPlayer.Not
                 }
                 else{
                     for(User u: userdatabase){
+                        if(u.getActive() == 1)
                         users.add(u.getUsername());
                     }
                 }
+                Log.e("Test", "Limit: " + limit + " period: " + period + " users: " + users.size() + " active? ");
                new Process(context, new RemoteFetch() , users, period, limit).execute();
             }
         });

@@ -59,6 +59,9 @@ public class PlaylistDAO {
         database.execSQL("DELETE FROM " + TABLE_NAME + " WHERE playlist_name=?",
                 new String[]{name});
     }
+    public void deleteAll() {
+        database.delete(TABLE_NAME, null, null);
+    }
 
 
     /**

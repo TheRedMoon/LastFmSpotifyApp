@@ -283,6 +283,7 @@ public class RemoteFetch {
             return result;
         }catch(Exception e){
             Log.e("LastFm", "One or more fields not found in the JSON data");
+            Log.e("LastFm", "JSON:" + json.toString());
         }
         return null;
     }

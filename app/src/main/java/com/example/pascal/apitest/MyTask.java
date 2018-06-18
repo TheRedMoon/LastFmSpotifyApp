@@ -107,7 +107,7 @@ public class MyTask extends AsyncTask<String, Integer, Pager<PlaylistSimple>> {
             int position = 0;
             Map<String, Object> queryParameters = new HashMap<String, Object>();
             queryParameters.put("position", String.valueOf(position));
-            if(i == 0 & !overwrite) {
+            if(i == 0 && overwrite) {
                 StringBuilder sb = new StringBuilder();
                 for(int j = 0; j< trackUris.size(); j++){
                     String s = trackUris.get(j);

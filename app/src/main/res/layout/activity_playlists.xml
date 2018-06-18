@@ -61,10 +61,24 @@
         android:id="@+id/playlist_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/set_activeplaylist"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Set active playlist" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/clear_playlists"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Delete all " />
+        <Button
+            android:id="@+id/set_activeplaylist"
+            android:layout_width="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:text="Confirm" />
+    </RelativeLayout>
+
 
 </LinearLayout>

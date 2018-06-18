@@ -28,7 +28,9 @@ public class PlaylistAct extends AppCompatActivity {
     private SpinAdapter adapter;
     private ArrayList<Playlist> playlistvalues;
     private Playlist chosenactivePl;
-    
+    private Spinner plSpinner;
+    private Button clear;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +40,21 @@ public class PlaylistAct extends AppCompatActivity {
         setactivepl = findViewById(R.id.set_activeplaylist);
         delplaylist = findViewById(R.id.delete_playlist);
         addplaylist = findViewById(R.id.add_playlist);
+        clear = findViewById(R.id.clear_playlists);
 //        playlist =  findViewById(R.id.txt_playlist);
-        Spinner plSpinner = (Spinner) findViewById(R.id.playlist_spinner);
-
+        plSpinner = (Spinner) findViewById(R.id.playlist_spinner);
+        getSupportActionBar().setTitle("Playlists");
+        clear.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                BaseApp.playlistDAO.deleteAll();
+                playlistvalues = new ArrayList<>();
+                adapter = new SpinAdapter(PlaylistAct.this,
+                        android.R.layout.simple_spinner_item, playlistvalues
+                );
+                plSpinner.setAdapter(adapter); // Set the custom adapter to the spinner
+//                PrefUtils.setStringPreference(PlaylistAct.this, "playlistname", "");
+            }
+        });
         addplaylist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 //                String plid = playlistid.getText().toString();
@@ -60,6 +74,7 @@ public class PlaylistAct extends AppCompatActivity {
                 if(chosenactivePl != null){
 //                    PrefUtils.setStringPreference(PlaylistAct.this, "playlistid", chosenactivePl.getId());
                     PrefUtils.setStringPreference(PlaylistAct.this, "playlistname", chosenactivePl.getName());
+                    finish();
                 }
                 else{
                     Toast.makeText(PlaylistAct.this,"Choose a playlist in the spinner above",
@@ -82,8 +97,7 @@ public class PlaylistAct extends AppCompatActivity {
                 Playlist p = adapter.getItem(position);
                 chosenactivePl = p;
                 // Here you can do the action you want to...
-                Toast.makeText(PlaylistAct.this, "\nName: " + p.getName(),
-                        Toast.LENGTH_SHORT).show();
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapter) {  }
@@ -93,6 +107,12 @@ public class PlaylistAct extends AppCompatActivity {
     private void deletePlaylist(String plname) {
         if(plname != null){
             BaseApp.playlistDAO.deleteByName(plname);
+            playlistvalues = getPlaylistValues();
+            adapter = new SpinAdapter(PlaylistAct.this,
+                    android.R.layout.simple_spinner_item, playlistvalues
+            );
+            plSpinner.setAdapter(adapter); // Set the custom adapter to the spinner
+//                PrefUtils.setStringPreference(PlaylistAct.this, "playlistname", "");
         }
         else{
             Toast.makeText(this, "Enter valid playlist id or name", Toast.LENGTH_SHORT).show();
@@ -104,6 +124,13 @@ public class PlaylistAct extends AppCompatActivity {
         p.setName(plname);
 //        p.setId(plid);
         BaseApp.playlistDAO.insert(p);
+        playlistvalues = getPlaylistValues();
+
+        adapter = new SpinAdapter(this,
+                android.R.layout.simple_spinner_item, playlistvalues
+        );
+        plSpinner.setAdapter(adapter); // Set the custom adapter to the spinner
+        plSpinner.setSelection(playlistvalues.size()-1);
     }
 
     private ArrayList<Playlist> getPlaylistValues() {
